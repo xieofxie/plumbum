@@ -1234,8 +1234,9 @@ class TestLocalEncoding:
         name = self.richstr + "_program"
         if IS_WIN32:
             name += ".exe"
-            shutil.copy2(sys.executable, name)
-            command = local[local.cwd / name]["-c", "print('yes')"]
+            # A copied Python venv launcher cannot find its pyvenv.cfg.
+            shutil.copy2(local["cmd"].executable, name)
+            command = local[local.cwd / name]["/d", "/c", "echo yes"]
         else:
             with open(name, "w") as f:
                 f.write(f"#!{sys.executable}\nprint('yes')")
